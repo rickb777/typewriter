@@ -101,9 +101,9 @@ func (p *Package) Eval(name string) (Type, error) {
 	result = Type{
 		Pointer:    isPointer(t.Type),
 		Name:       strings.TrimLeft(name, Pointer(true).String()), // trims the * if it exists
-		comparable: isComparable(t.Type),
-		numeric:    isNumeric(t.Type),
-		ordered:    isOrdered(t.Type),
+		Comparable: isComparable(t.Type),
+		Numeric:    isNumeric(t.Type),
+		Ordered:    isOrdered(t.Type),
 		Type:       t.Type,
 	}
 

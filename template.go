@@ -3,16 +3,15 @@ package typewriter
 import (
 	"fmt"
 	"strings"
-
 	"text/template"
 )
 
 // Template includes the text of a template as well as requirements for the types to which it can be applied.
 // +gen * slice:"Where"
 type Template struct {
-	Name, Text     string
-	FuncMap        map[string]interface{}
-	TypeConstraint Constraint
+	Name, Text               string
+	FuncMap                  map[string]interface{}
+	TypeConstraint           Constraint
 	// Indicates both the number of required type parameters, and the constraints of each (if any)
 	TypeParameterConstraints []Constraint
 }

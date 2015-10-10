@@ -12,7 +12,7 @@ type Type struct {
 	Pointer                      Pointer
 	Name                         string
 	Tags                         TagSlice
-	comparable, numeric, ordered bool
+	Comparable, Numeric, Ordered bool
 	test                         test
 	types.Type
 }

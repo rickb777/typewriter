@@ -13,15 +13,15 @@ type Constraint struct {
 }
 
 func (c Constraint) TryType(t Type) error {
-	if c.Comparable && !t.comparable {
+	if c.Comparable && !t.Comparable {
 		return fmt.Errorf("%s must be comparable (i.e. support == and !=)", t)
 	}
 
-	if c.Numeric && !t.numeric {
+	if c.Numeric && !t.Numeric {
 		return fmt.Errorf("%s must be numeric", t)
 	}
 
-	if c.Ordered && !t.ordered {
+	if c.Ordered && !t.Ordered {
 		return fmt.Errorf("%s must be ordered (i.e. support > and <)", t)
 	}
 

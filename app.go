@@ -59,8 +59,8 @@ var typeWriters []Interface
 // Comparable to the approach taken by stdlib's image package for registration of image types (eg image/png).
 // Your program will do something like:
 //	import (
-//		"github.com/clipperhouse/typewriter"
-//		_ "github.com/clipperhouse/slice"
+//		"github.com/rickb777/typewriter"
+//		_ "github.com/rickb777/slice"
 //	)
 func Register(tw Interface) error {
 	for _, v := range typeWriters {
