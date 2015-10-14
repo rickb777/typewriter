@@ -12,7 +12,12 @@ type Constraint struct {
 	Ordered bool
 }
 
+// deprecated - use CheckCompatibility
 func (c Constraint) TryType(t Type) error {
+	return c.CheckCompatibility(t)
+}
+
+func (c Constraint) CheckCompatibility(t Type) error {
 	if c.Comparable && !t.Comparable {
 		return fmt.Errorf("%s must be comparable (i.e. support == and !=)", t)
 	}

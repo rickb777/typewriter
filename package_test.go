@@ -28,15 +28,15 @@ func TestEval(t *testing.T) {
 		t.Errorf("'app' is not a pointer type")
 	}
 
-	if t1.comparable {
+	if t1.Comparable {
 		t.Errorf("'app' is not a comparable type")
 	}
 
-	if t1.numeric {
+	if t1.Numeric {
 		t.Errorf("'app' is not a numeric type")
 	}
 
-	if t1.ordered {
+	if t1.Ordered {
 		t.Errorf("'app' is not an ordered type")
 	}
 
@@ -61,15 +61,15 @@ func TestEval(t *testing.T) {
 		t.Errorf("'*app' is a pointer type")
 	}
 
-	if !t2.comparable {
+	if !t2.Comparable {
 		t.Errorf("'*app' is a comparable type")
 	}
 
-	if t2.numeric {
+	if t2.Numeric {
 		t.Errorf("'*app' is not a numeric type")
 	}
 
-	if t2.ordered {
+	if t2.Ordered {
 		t.Errorf("'*app' is not an ordered type")
 	}
 
@@ -84,15 +84,15 @@ func TestEval(t *testing.T) {
 		t.Errorf("int is not a pointer type")
 	}
 
-	if !t3.comparable {
+	if !t3.Comparable {
 		t.Errorf("int is a comparable type")
 	}
 
-	if !t3.numeric {
+	if !t3.Numeric {
 		t.Errorf("int is a numeric type")
 	}
 
-	if !t3.ordered {
+	if !t3.Ordered {
 		t.Errorf("int is an ordered type")
 	}
 

@@ -21,9 +21,14 @@ func (tmpl *Template) Parse() (*template.Template, error) {
 	return template.New(tmpl.Name).Funcs(tmpl.FuncMap).Parse(tmpl.Text)
 }
 
+// TagExistsForType tests whether a given Type and TagValue satisfy a Template's type constraints.
+func (tmpl *Template) TagExistsForType(t Type, v TagValue) bool {
+	return tmpl.TryTypeAndValue(t, v) == nil
+}
+
 // TryTypeAndValue verifies that a given Type and TagValue satisfy a Template's type constraints.
 func (tmpl *Template) TryTypeAndValue(t Type, v TagValue) error {
-	if err := tmpl.TypeConstraint.TryType(t); err != nil {
+	if err := tmpl.TypeConstraint.CheckCompatibility(t); err != nil {
 		return fmt.Errorf("cannot apply %s to %s: %s", v.Name, t, err)
 	}
 
@@ -34,7 +39,7 @@ func (tmpl *Template) TryTypeAndValue(t Type, v TagValue) error {
 	for i := range v.TypeParameters {
 		c := tmpl.TypeParameterConstraints[i]
 		tp := v.TypeParameters[i]
-		if err := c.TryType(tp); err != nil {
+		if err := c.CheckCompatibility(tp); err != nil {
 			return fmt.Errorf("cannot apply %s on %s: %s", v, t, err)
 		}
 	}
@@ -50,7 +55,7 @@ func (ts TemplateSlice) Funcs(FuncMap map[string]interface{}) {
 }
 
 // ByTag attempts to locate a template which meets type constraints, and parses it.
-func (ts TemplateSlice) ByTag(t Type, tag Tag) (*template.Template, error) {
+func (ts TemplateSlice) ByTag2(t Type, tag Tag) (*Template, error) {
 	// templates which might work
 	candidates := ts.Where(func(tmpl *Template) bool {
 		return strings.EqualFold(tmpl.Name, tag.Name)
@@ -63,18 +68,27 @@ func (ts TemplateSlice) ByTag(t Type, tag Tag) (*template.Template, error) {
 
 	// try to find one that meets type constraints
 	for _, tmpl := range candidates {
-		if err := tmpl.TypeConstraint.TryType(t); err == nil {
-			// eagerly return on success
-			return tmpl.Parse()
+		if err := tmpl.TypeConstraint.CheckCompatibility(t); err == nil {
+			return tmpl, nil
 		}
 	}
 
 	// send back the first error message; not great but OK most of the time
-	return nil, candidates[0].TypeConstraint.TryType(t)
+	return nil, candidates[0].TypeConstraint.CheckCompatibility(t)
 }
 
-// ByTagValue attempts to locate a template which meets type constraints, and parses it.
-func (ts TemplateSlice) ByTagValue(t Type, v TagValue) (*template.Template, error) {
+// ByTag attempts to locate a template which meets type constraints, and parses it.
+func (ts TemplateSlice) ByTag(t Type, tag Tag) (*template.Template, error) {
+	tmpl, err := ts.ByTag2(t, tag)
+	if err != nil {
+		return nil, err
+	}
+	return tmpl.Parse()
+}
+
+
+// ByTagValue2 attempts to locate a template which meets type constraints, and parses it.
+func (ts TemplateSlice) ByTagValue2(t Type, v TagValue) (*Template, error) {
 	// a bit of poor-man's type resolution here
 
 	// templates which might work
@@ -83,18 +97,27 @@ func (ts TemplateSlice) ByTagValue(t Type, v TagValue) (*template.Template, erro
 	})
 
 	if len(candidates) == 0 {
-		err := fmt.Errorf("%s is unknown", v.Name)
+		err := fmt.Errorf("%s is an unknown tag for the template on type %v.", v.Name, t)
 		return nil, err
 	}
 
 	// try to find one that meets type constraints
 	for _, tmpl := range candidates {
 		if err := tmpl.TryTypeAndValue(t, v); err == nil {
-			// eagerly return on success
-			return tmpl.Parse()
+			return tmpl, nil
 		}
 	}
 
 	// send back the first error message; not great but OK most of the time
 	return nil, candidates[0].TryTypeAndValue(t, v)
 }
+
+// ByTagValue attempts to locate a template which meets type constraints, and parses it.
+func (ts TemplateSlice) ByTagValue(t Type, v TagValue) (*template.Template, error) {
+	tmpl, err := ts.ByTagValue2(t, v)
+	if err != nil {
+		return nil, err
+	}
+	return tmpl.Parse()
+}
+

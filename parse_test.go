@@ -251,15 +251,15 @@ func TestGetTypes(t *testing.T) {
 
 	dummy := m["dummy"]
 
-	if !dummy.comparable {
+	if !dummy.Comparable {
 		t.Errorf("dummy type should be comparable")
 	}
 
-	if !dummy.ordered {
+	if !dummy.Ordered {
 		t.Errorf("dummy type should be ordered")
 	}
 
-	if !dummy.numeric {
+	if !dummy.Numeric {
 		t.Errorf("dummy type should be numeric")
 	}
 
@@ -274,29 +274,29 @@ func TestGetTypes(t *testing.T) {
 
 	dummy2 := m["dummy2"]
 
-	if dummy2.comparable {
+	if dummy2.Comparable {
 		t.Errorf("dummy2 type should not be comparable")
 	}
 
-	if dummy2.ordered {
+	if dummy2.Ordered {
 		t.Errorf("dummy2 type should not be ordered")
 	}
 
-	if dummy2.numeric {
+	if dummy2.Numeric {
 		t.Errorf("dummy2 type should not be numeric")
 	}
 
 	dummy3 := m["dummy3"]
 
-	if !dummy3.comparable {
+	if !dummy3.Comparable {
 		t.Errorf("dummy3 type should be comparable")
 	}
 
-	if !dummy3.ordered {
+	if !dummy3.Ordered {
 		t.Errorf("dummy3 type should be ordered")
 	}
 
-	if dummy3.numeric {
+	if dummy3.Numeric {
 		t.Errorf("dummy3 type should not be numeric")
 	}
 
@@ -379,14 +379,6 @@ func TestGetTypes(t *testing.T) {
 
 func typeSliceToMap(typs []Type) map[string]Type {
 	result := make(map[string]Type)
-	for _, v := range typs {
-		result[v.Name] = v
-	}
-	return result
-}
-
-func tagSliceToMap(typs []Tag) map[string]Tag {
-	result := make(map[string]Tag)
 	for _, v := range typs {
 		result[v.Name] = v
 	}

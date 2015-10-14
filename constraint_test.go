@@ -6,9 +6,9 @@ func TestTryType(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
 			typ := Type{
-				comparable: i == 0,
-				numeric:    i == 1,
-				ordered:    i == 2,
+				Comparable: i == 0,
+				Numeric:    i == 1,
+				Ordered:    i == 2,
 			}
 			c := Constraint{
 				Comparable: j == 0,
@@ -16,7 +16,7 @@ func TestTryType(t *testing.T) {
 				Ordered:    j == 2,
 			}
 
-			err := c.TryType(typ)
+			err := c.CheckCompatibility(typ)
 			should := i == j
 
 			if should != (err == nil) {

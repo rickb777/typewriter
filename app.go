@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	"golang.org/x/tools/imports"
+	"go/scanner"
 )
 
 // App is the high-level construct for package-level code generation. Typical usage is along the lines of:
@@ -105,8 +106,9 @@ func (a *App) WriteAll() ([]string, error) {
 
 	// validate generated ast's before committing to files
 	for f, b := range buffers {
-		if _, err := parser.ParseFile(token.NewFileSet(), f, b.String(), 0); err != nil {
-			// TODO: prompt to write (ignored) _file on error? parsing errors are meaningless without.
+		src := b.String()
+		if _, err := parser.ParseFile(token.NewFileSet(), f, src, 0); err != nil {
+			printSyntaxError(err, src)
 			return written, err
 		}
 	}
@@ -128,6 +130,23 @@ func (a *App) WriteAll() ([]string, error) {
 	}
 
 	return written, nil
+}
+
+func printSyntaxError(err error, src string) {
+	offsets := make(map[int]bool)
+	se := err.(scanner.ErrorList)
+	for _, e := range se {
+		fmt.Fprintf(os.Stderr, "%s\n", e)
+		offsets[e.Pos.Line] = true
+	}
+	for i, line := range strings.Split(src, "\n") {
+		n := i + 1
+		arrow := "  "
+		if offsets[n] {
+			arrow = ">>"
+		}
+		fmt.Fprintf(os.Stderr, "%4d: %s %s\n", n, arrow, line)
+	}
 }
 
 var twoLines = bytes.Repeat([]byte{'\n'}, 2)
@@ -160,7 +179,7 @@ func write(w *bytes.Buffer, a *App, p *Package, t Type, tw Interface) (n int, er
 	return n, err
 }
 
-func writeFile(filename string, byts []byte) error {
+func writeFile(filename string, bytes []byte) error {
 	w, err := os.Create(filename)
 
 	if err != nil {
@@ -169,7 +188,7 @@ func writeFile(filename string, byts []byte) error {
 
 	defer w.Close()
 
-	w.Write(byts)
+	w.Write(bytes)
 
 	return nil
 }

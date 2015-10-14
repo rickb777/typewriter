@@ -34,7 +34,7 @@ func TestTryTypeAndValue(t *testing.T) {
 
 	typ2 := Type{
 		Name:    "TestType",
-		numeric: true,
+		Numeric: true,
 	}
 
 	v2 := TagValue{
@@ -55,7 +55,7 @@ func TestTryTypeAndValue(t *testing.T) {
 
 	typ3 := Type{
 		Name:    "TestType",
-		ordered: true,
+		Ordered: true,
 	}
 
 	v3 := TagValue{
@@ -83,8 +83,8 @@ func TestTryTypeAndValue(t *testing.T) {
 	v4 := TagValue{
 		Name: "TestValue",
 		TypeParameters: []Type{
-			{Name: "foo", numeric: true},
-			{Name: "bar", ordered: true},
+			{Name: "foo", Numeric: true},
+			{Name: "bar", Ordered: true},
 		},
 	}
 
@@ -108,8 +108,8 @@ func TestTryTypeAndValue(t *testing.T) {
 	v5 := TagValue{
 		Name: "TestValue",
 		TypeParameters: []Type{
-			{Name: "foo", numeric: false},
-			{Name: "bar", ordered: true},
+			{Name: "foo", Numeric: false},
+			{Name: "bar", Ordered: true},
 		},
 	}
 
@@ -134,8 +134,8 @@ func TestTryTypeAndValue(t *testing.T) {
 	v6 := TagValue{
 		Name: "TestValue",
 		TypeParameters: []Type{
-			{Name: "foo", numeric: true},
-			{Name: "bar", ordered: true},
+			{Name: "foo", Numeric: true},
+			{Name: "bar", Ordered: true},
 		},
 	}
 
@@ -214,7 +214,7 @@ func TestByTag(t *testing.T) {
 
 	typ3 := Type{
 		Name:    "TestType",
-		ordered: true,
+		Ordered: true,
 	}
 
 	tag3 := Tag{
@@ -247,7 +247,7 @@ func TestByTag(t *testing.T) {
 
 	typ4 := Type{
 		Name:    "TestType",
-		ordered: true,
+		Ordered: true,
 	}
 
 	tag4 := Tag{
@@ -380,7 +380,7 @@ func TestByTagValue(t *testing.T) {
 	v4 := TagValue{
 		Name: "TestValue",
 		TypeParameters: []Type{
-			{Name: "bar", ordered: true},
+			{Name: "bar", Ordered: true},
 		},
 	}
 
