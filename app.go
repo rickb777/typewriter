@@ -108,7 +108,7 @@ func (a *App) WriteAll() ([]string, error) {
 	for f, b := range buffers {
 		src := b.String()
 		if _, err := parser.ParseFile(token.NewFileSet(), f, src, 0); err != nil {
-			printSyntaxError(err, src)
+			printSyntaxError(f, err, src)
 			return written, err
 		}
 	}
@@ -132,20 +132,47 @@ func (a *App) WriteAll() ([]string, error) {
 	return written, nil
 }
 
-func printSyntaxError(err error, src string) {
-	offsets := make(map[int]bool)
-	se := err.(scanner.ErrorList)
-	for _, e := range se {
-		fmt.Fprintf(os.Stderr, "%s\n", e)
-		offsets[e.Pos.Line] = true
+const context = 3
+
+func min(a, b int) int {
+	if a < b {
+		return a
 	}
-	for i, line := range strings.Split(src, "\n") {
-		n := i + 1
-		arrow := "  "
-		if offsets[n] {
-			arrow = ">>"
+	return b
+}
+
+func max(a, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
+func printSyntaxError(f string, err error, src string) {
+	se, ok := err.(scanner.ErrorList)
+	if ok && len(se) > 0 {
+		lines := strings.Split(src, "\n")
+		n := len(lines)
+
+		fmt.Fprintf(os.Stderr, "*** %d syntax errors found in template when generating %s.\n", len(se), f)
+
+		for _, e := range se {
+			l := e.Pos.Line
+			l1 := max(l - context, 0)
+			l2 := min(l + context, n)
+			fmt.Fprintf(os.Stderr, "---\n")
+			for i := l1; i <= l2; i++ {
+				fmt.Fprintf(os.Stderr, "%5d: %s\n", i, lines[i - 1])
+				if i == l {
+					pad := bytes.Buffer{}
+					for p := 0; p < e.Pos.Column; p++ {
+						pad.WriteByte(' ')
+					}
+					fmt.Fprintf(os.Stderr, "*** %s  ^ %s\n", pad.String(), e)
+				}
+			}
 		}
-		fmt.Fprintf(os.Stderr, "%4d: %s %s\n", n, arrow, line)
+		fmt.Fprintf(os.Stderr, "---\n")
 	}
 }
 
