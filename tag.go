@@ -1,6 +1,5 @@
 package typewriter
 
-// +gen slice
 type Tag struct {
 	Name    string
 	Values  []TagValue
@@ -12,3 +11,5 @@ type TagValue struct {
 	TypeParameters []Type
 	typeParameters []item
 }
+
+type TagSlice []Tag
