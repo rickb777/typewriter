@@ -36,6 +36,12 @@ func (t Type) AddrOf() string {
 	return t.Pointer.AddrOf()
 }
 
+// IsBasic returns true for basic types
+func (t Type) IsBasic() bool {
+	_, ok := t.Type.(*types.Basic)
+	return ok
+}
+
 // LongName provides a name that may be useful for generated names.
 // For example, map[string]Foo becomes MapStringFoo.
 func (t Type) LongName() string {
