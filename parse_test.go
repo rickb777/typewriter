@@ -326,8 +326,12 @@ func testGetTypesDummy(t *testing.T, m map[string]Type) {
 		t.Errorf("dummy type should be numeric")
 	}
 
-	if !dummy.IsBasic() {
-		t.Errorf("dummy type IsBasic should be true")
+	if dummy.IsBasic() {
+		t.Errorf("dummy type IsBasic should be false")
+	}
+
+	if !dummy.Underlying().IsBasic() {
+		t.Errorf("dummy.Underlying() type IsBasic should be true")
 	}
 
 	if dummy.Underlying().Name != "int" {
@@ -383,8 +387,12 @@ func testGetTypesDummy3(t *testing.T, m map[string]Type) {
 		t.Errorf("dummy3 type should not be numeric")
 	}
 
-	if !dummy3.IsBasic() {
+	if dummy3.IsBasic() {
 		t.Errorf("dummy3 type IsBasic should be false")
+	}
+
+	if !dummy3.Underlying().IsBasic() {
+		t.Errorf("dummy3.Underlying() type IsBasic should be true")
 	}
 
 	if dummy3.Underlying().Name != "string" {

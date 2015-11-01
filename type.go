@@ -38,7 +38,7 @@ func (t Type) AddrOf() string {
 
 // IsBasic returns true for basic types (string, int etc)
 func (t Type) IsBasic() bool {
-	_, ok := t.Type.Underlying().(*types.Basic)
+	_, ok := t.Type.(*types.Basic)
 	return ok
 }
 
