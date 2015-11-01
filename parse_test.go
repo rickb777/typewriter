@@ -249,76 +249,10 @@ func TestGetTypes(t *testing.T) {
 		return // get out instead of nil panics below
 	}
 
-	dummy := m["dummy"]
-
-	if !dummy.Comparable {
-		t.Errorf("dummy type should be comparable")
-	}
-
-	if !dummy.Ordered {
-		t.Errorf("dummy type should be ordered")
-	}
-
-	if !dummy.Numeric {
-		t.Errorf("dummy type should be numeric")
-	}
-
-	if len(dummy.Tags) != 1 {
-		t.Fatalf("typ should have 1 tag, found %v", len(m["dummy"].Tags))
-	}
-
-	if len(dummy.Tags[0].Values) != 1 {
-		fmt.Println(dummy.Tags[0].Values)
-		t.Errorf("Tag should have 1 Item, found %v", len(m["dummy"].Tags[0].Values))
-	}
-
-	dummy2 := m["dummy2"]
-
-	if dummy2.Comparable {
-		t.Errorf("dummy2 type should not be comparable")
-	}
-
-	if dummy2.Ordered {
-		t.Errorf("dummy2 type should not be ordered")
-	}
-
-	if dummy2.Numeric {
-		t.Errorf("dummy2 type should not be numeric")
-	}
-
-	dummy3 := m["dummy3"]
-
-	if !dummy3.Comparable {
-		t.Errorf("dummy3 type should be comparable")
-	}
-
-	if !dummy3.Ordered {
-		t.Errorf("dummy3 type should be ordered")
-	}
-
-	if dummy3.Numeric {
-		t.Errorf("dummy3 type should not be numeric")
-	}
-
-	// check tag existence at a high level here, see also tag parsing tests
-
-	app := m["App"]
-
-	if len(app.Tags) != 2 {
-		t.Errorf("typ should have 2 TagSlice, found %v", len(app.Tags))
-	}
-
-	if len(app.Tags[0].Values) != 1 {
-		t.Errorf("Tag should have 1 Item, found %v", len(app.Tags[0].Values))
-	}
-
-	if len(app.Tags[1].Values) != 2 {
-		t.Errorf("Tag should have 2 Values, found %v", len(app.Tags[1].Values))
-	}
-
-	if len(app.Tags[1].Values[0].TypeParameters) != 1 {
-		t.Fatalf("TagValue should have 1 TypeParameter, found %v", len(app.Tags[1].Values[0].TypeParameters))
-	}
+	testGetTypesDummy(t, m)
+	testGetTypesDummy2(t, m)
+	testGetTypesDummy3(t, m)
+	testGetTypesApp(t, m)
 
 	// filtered types should not show up
 
@@ -374,6 +308,127 @@ func TestGetTypes(t *testing.T) {
 
 	if err4 == nil {
 		t.Error("should have been unable to evaluate types of incomplete package")
+	}
+}
+
+func testGetTypesDummy(t *testing.T, m map[string]Type) {
+	dummy := m["dummy"]
+
+	if !dummy.Comparable {
+		t.Errorf("dummy type should be comparable")
+	}
+
+	if !dummy.Ordered {
+		t.Errorf("dummy type should be ordered")
+	}
+
+	if !dummy.Numeric {
+		t.Errorf("dummy type should be numeric")
+	}
+
+	if !dummy.IsBasic() {
+		t.Errorf("dummy type IsBasic should be true")
+	}
+
+	if dummy.Underlying().Name != "int" {
+		t.Errorf("dummy Underlying should not be %q", dummy.Underlying().Name)
+	}
+
+	if dummy.Underlying().LongName() != "Int" {
+		t.Errorf("dummy Underlying should not be %q", dummy.Underlying().LongName())
+	}
+
+	if len(dummy.Tags) != 1 {
+		t.Fatalf("typ should have 1 tag, found %v", len(m["dummy"].Tags))
+	}
+
+	if len(dummy.Tags[0].Values) != 1 {
+		fmt.Println(dummy.Tags[0].Values)
+		t.Errorf("Tag should have 1 Item, found %v", len(m["dummy"].Tags[0].Values))
+	}
+}
+
+func testGetTypesDummy2(t *testing.T, m map[string]Type) {
+	dummy2 := m["dummy2"]
+
+	if dummy2.Comparable {
+		t.Errorf("dummy2 type should not be comparable")
+	}
+
+	if dummy2.Ordered {
+		t.Errorf("dummy2 type should not be ordered")
+	}
+
+	if dummy2.Numeric {
+		t.Errorf("dummy2 type should not be numeric")
+	}
+
+	if dummy2.IsBasic() {
+		t.Errorf("dummy2 type IsBasic should be false")
+	}
+}
+
+func testGetTypesDummy3(t *testing.T, m map[string]Type) {
+	dummy3 := m["dummy3"]
+
+	if !dummy3.Comparable {
+		t.Errorf("dummy3 type should be comparable")
+	}
+
+	if !dummy3.Ordered {
+		t.Errorf("dummy3 type should be ordered")
+	}
+
+	if dummy3.Numeric {
+		t.Errorf("dummy3 type should not be numeric")
+	}
+
+	if !dummy3.IsBasic() {
+		t.Errorf("dummy3 type IsBasic should be false")
+	}
+
+	if dummy3.Underlying().Name != "string" {
+		t.Errorf("dummy Underlying should not be %q", dummy3.Underlying().Name)
+	}
+
+	if dummy3.Underlying().LongName() != "String" {
+		t.Errorf("dummy Underlying should not be %q", dummy3.Underlying().LongName())
+	}
+}
+
+func testGetTypesApp(t *testing.T, m map[string]Type) {
+	app := m["App"]
+
+	if app.Comparable {
+		t.Errorf("app type should not be comparable")
+	}
+
+	if app.Ordered {
+		t.Errorf("app type should not be ordered")
+	}
+
+	if app.Numeric {
+		t.Errorf("app type should not be numeric")
+	}
+
+	if app.IsBasic() {
+		t.Errorf("app type IsBasic should be false")
+	}
+
+	if len(app.Tags) != 2 {
+		t.Errorf("typ should have 2 TagSlice, found %v", len(app.Tags))
+	}
+
+	if len(app.Tags[0].Values) != 1 {
+		t.Errorf("Tag should have 1 Item, found %v", len(app.Tags[0].Values))
+	}
+
+	if len(app.Tags[1].Values) != 2 {
+		t.Errorf("Tag should have 2 Values, found %v", len(app.Tags[1].Values))
+	}
+
+	if len(app.Tags[1].Values[0].TypeParameters) != 1 {
+		t.Fatalf("TagValue should have 1 TypeParameter, found %v", len(app.Tags[1].Values[0].TypeParameters))
 	}
 }
 

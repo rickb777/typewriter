@@ -36,10 +36,16 @@ func (t Type) AddrOf() string {
 	return t.Pointer.AddrOf()
 }
 
-// IsBasic returns true for basic types
+// IsBasic returns true for basic types (string, int etc)
 func (t Type) IsBasic() bool {
-	_, ok := t.Type.(*types.Basic)
+	_, ok := t.Type.Underlying().(*types.Basic)
 	return ok
+}
+
+// Underlying returns the underlying Go type as a Type
+func (t Type) Underlying() Type {
+	u := t.Type.Underlying()
+	return Type{Name: u.String(), Type: u}
 }
 
 // LongName provides a name that may be useful for generated names.

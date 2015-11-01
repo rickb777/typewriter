@@ -41,7 +41,7 @@ func TestEval(t *testing.T) {
 	}
 
 	// embedded types.Type should be accessible via type assertion
-	tt1, ok1 := t1.Underlying().(*types.Struct)
+	tt1, ok1 := t1.Type.Underlying().(*types.Struct)
 	if !ok1 {
 		t.Errorf("unable to assert %s as a *types.Struct", t1)
 	}

@@ -8,5 +8,6 @@ type (
 	dummy2 map[string]dummy
 
 	// +test foo:"bar"
-	dummy3 string
+	dummy3 dummy4
+	dummy4 string
 )
