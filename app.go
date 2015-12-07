@@ -22,10 +22,11 @@ import (
 // +test foo:"Bar" baz:"qux[struct{}],thing"
 type App struct {
 	// All typewriter.Package found in the current directory.
-	Packages []*Package
+	Packages      []*Package
 	// All typewriter.Interface's registered on init.
-	TypeWriters []Interface
-	Directive   string
+	TypeWriters   []Interface
+	Directive     string
+	DescribeTypes bool
 }
 
 // NewApp parses the current directory, enumerating registered TypeWriters and collecting Types and their related information.
@@ -83,6 +84,10 @@ func (a *App) WriteAll() ([]string, error) {
 	// write the generated code for each Type & TypeWriter into memory
 	for _, p := range a.Packages {
 		for _, t := range p.Types {
+			if a.DescribeTypes {
+				fmt.Printf("%v.%s\n%#v\n\n", p.Name(), t.Name, t)
+			}
+
 			for _, tw := range a.TypeWriters {
 				var b bytes.Buffer
 				n, err := write(&b, a, p, t, tw)
