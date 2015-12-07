@@ -9,14 +9,15 @@ import (
 )
 
 type Type struct {
-	Pointer                      Pointer
-	Name                         string
-	Tags                         TagSlice
-	Comparable, Numeric, Ordered bool
-	test                         test
+	Pointer          Pointer
+	Name             string
+	Tags             TagSlice
+	Comparable       bool // any type that can be compared using '==' etc (which includes all pointers)
+	FullyComparable  bool // as above, provided it is not a pointer to a non-comparable
+	Numeric, Ordered bool
+	test             test
 	types.Type
 }
-
 
 func (t Type) String() (result string) {
 	return fmt.Sprintf("%s%s", t.Pointer.String(), t.Name)
@@ -74,7 +75,6 @@ func (t Type) FindTag(name string) (Tag, bool) {
 	return Tag{}, false
 }
 
-
 // Pointer exists as a type to allow simple use as bool or as String, which returns *
 type Pointer bool
 
@@ -100,7 +100,6 @@ func (p Pointer) AddrOf() string {
 	}
 	return ""
 }
-
 
 type test bool
 

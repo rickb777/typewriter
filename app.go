@@ -11,8 +11,8 @@ import (
 	"strings"
 	"text/template"
 
-	"golang.org/x/tools/imports"
 	"go/scanner"
+	"golang.org/x/tools/imports"
 )
 
 // App is the high-level construct for package-level code generation. Typical usage is along the lines of:
@@ -22,7 +22,7 @@ import (
 // +test foo:"Bar" baz:"qux[struct{}],thing"
 type App struct {
 	// All typewriter.Package found in the current directory.
-	Packages      []*Package
+	Packages []*Package
 	// All typewriter.Interface's registered on init.
 	TypeWriters   []Interface
 	Directive     string
@@ -163,11 +163,11 @@ func printSyntaxError(f string, err error, src string) {
 
 		for _, e := range se {
 			l := e.Pos.Line
-			l1 := max(l - context, 0)
-			l2 := min(l + context, n)
+			l1 := max(l-context, 0)
+			l2 := min(l+context, n)
 			fmt.Fprintf(os.Stderr, "---\n")
 			for i := l1; i <= l2; i++ {
-				fmt.Fprintf(os.Stderr, "%5d: %s\n", i, lines[i - 1])
+				fmt.Fprintf(os.Stderr, "%5d: %s\n", i, lines[i-1])
 				if i == l {
 					pad := bytes.Buffer{}
 					for p := 0; p < e.Pos.Column; p++ {

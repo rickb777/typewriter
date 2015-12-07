@@ -32,6 +32,10 @@ func TestEval(t *testing.T) {
 		t.Errorf("'app' is not a comparable type")
 	}
 
+	if t1.FullyComparable {
+		t.Errorf("'app' is not a fully-comparable type")
+	}
+
 	if t1.Numeric {
 		t.Errorf("'app' is not a numeric type")
 	}
@@ -46,8 +50,8 @@ func TestEval(t *testing.T) {
 		t.Errorf("unable to assert %s as a *types.Struct", t1)
 	}
 
-	if tt1.NumFields() != 3 {
-		t.Errorf("%s should have 3 fields", tt1)
+	if tt1.NumFields() != 4 {
+		t.Errorf("%s should have 4 fields", tt1)
 	}
 
 	s2 := "*App"
@@ -63,6 +67,10 @@ func TestEval(t *testing.T) {
 
 	if !t2.Comparable {
 		t.Errorf("'*app' is a comparable type")
+	}
+
+	if t2.FullyComparable {
+		t.Errorf("'*app' is not a fully-comparable type")
 	}
 
 	if t2.Numeric {
@@ -86,6 +94,10 @@ func TestEval(t *testing.T) {
 
 	if !t3.Comparable {
 		t.Errorf("int is a comparable type")
+	}
+
+	if !t3.FullyComparable {
+		t.Errorf("int is a fully-comparable type")
 	}
 
 	if !t3.Numeric {

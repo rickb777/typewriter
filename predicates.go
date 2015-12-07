@@ -35,3 +35,8 @@ func isPointer(typ types.Type) Pointer {
 	_, ok := typ.Underlying().(*types.Pointer)
 	return Pointer(ok)
 }
+
+func isFullyComparable(typ types.Type) bool {
+	ptr, isPtr := typ.Underlying().(*types.Pointer)
+	return (isPtr && types.Comparable(ptr.Elem())) || (!isPtr && types.Comparable(typ))
+}

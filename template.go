@@ -9,9 +9,9 @@ import (
 // Template includes the text of a template as well as requirements for the types to which it can be applied.
 // +gen * slice:"Where"
 type Template struct {
-	Name, Text               string
-	FuncMap                  map[string]interface{}
-	TypeConstraint           Constraint
+	Name, Text     string
+	FuncMap        map[string]interface{}
+	TypeConstraint Constraint
 	// Indicates both the number of required type parameters, and the constraints of each (if any)
 	TypeParameterConstraints []Constraint
 }
@@ -86,7 +86,6 @@ func (ts TemplateSlice) ByTag(t Type, tag Tag) (*template.Template, error) {
 	return tmpl.Parse()
 }
 
-
 // ByTagValue2 attempts to locate a template which meets type constraints, and parses it.
 func (ts TemplateSlice) ByTagValue2(t Type, v TagValue) (*Template, error) {
 	// a bit of poor-man's type resolution here
@@ -120,4 +119,3 @@ func (ts TemplateSlice) ByTagValue(t Type, v TagValue) (*template.Template, erro
 	}
 	return tmpl.Parse()
 }
-
