@@ -3,12 +3,10 @@ package typewriter
 import (
 	"fmt"
 	"go/ast"
+	"go/importer"
 	"go/token"
+	"go/types"
 	"strings"
-
-	// gcimporter implements Import for gc-generated files
-	_ "golang.org/x/tools/go/gcimporter"
-	"golang.org/x/tools/go/types"
 )
 
 type evaluator interface {
@@ -71,6 +69,7 @@ func getPackage(fset *token.FileSet, a *ast.Package, conf *Config) (*Package, *T
 	config := types.Config{
 		DisableUnusedImportCheck: true,
 		IgnoreFuncBodies:         true,
+		Importer:                 importer.Default(),
 	}
 
 	if conf.IgnoreTypeCheckErrors {
